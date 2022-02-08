@@ -24,5 +24,6 @@ A script and webserver to generate and install Certbot certificates using Nginx 
 
 ### Webserver
 
-- `sudo python3 index.py`
+- I recommend generating a self-signed certificate to enforce TLS on the app.
+- `sudo FLASK_APP=index.py flask run -p [port_num] -h 0.0.0.0 --cert=cert.pem --key=key.pem`
 - Default credentials: `admin:admin` _Please change password upon first login_
