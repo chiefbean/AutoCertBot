@@ -1,0 +1,202 @@
+<html>
+	<head>
+		<style>
+			body {
+				font-family: Arial, Helvetica, sans-serif;
+			}
+			div {
+				width: 50%;
+				margin: auto;
+				border-radius: 5px;
+				box-shadow: 0 0 10px 10px hsl(0deg 0% 69% / 20%);
+				border: 1px solid #d8d8d8;
+			}
+			form {
+				text-align: center;
+				width: 50%;
+				margin: auto;
+			}
+			input[type=text], input[type=password] {
+				width: 100%;
+				padding: 10px 15px;
+				border: 1px solid #555555;
+				border-radius: 3px;
+			}
+			input[type=submit] {
+				width: 60%;
+				margin: auto;
+				border: 2px solid #555555;
+				color: black;
+				padding: 10px 25px;
+				background: white;
+				border-radius: 3px;
+				transition-duration: 0.4s;
+			}
+			input[type=submit]:hover {
+				background: #555555;
+				color: white;
+			}
+			button {
+				width: 100%;
+				border: 2px solid #555555;
+				color: black;
+				padding: 10px 25px;
+				background: white;
+				border-radius: 3px;
+				transition-duration: 0.4s;
+			}
+			button:hover {
+				background: #555555;
+				color: white;
+			}
+			hr {
+				width: 80%;
+				margin: 20px auto;
+				color: #555555;
+			}
+			#out {
+				padding: 20px;
+				height: 360px;
+				width: 360px;
+				border: 1px solid #d8d8d8;
+				border-radius: 3px;
+				margin: 30px auto;
+				overflow: scroll;
+			}
+			span:after {
+				content: "\A";
+				white-space: pre;
+			}
+			.overlay {
+				position: fixed;
+				padding: 20px;
+				width: 360px;
+				height: 360px;
+				left: 0px;
+				top: 0px;
+				right: 0px;
+				bottom: 70px;
+				background: rgba(255, 255, 255, 1);
+				z-index: 999;
+			}
+			#domains p {
+				width: 360px;
+				height: 300px;
+				overflow: scroll;
+			}
+			.blur   {
+		    filter: blur(5px);
+		    -webkit-filter: blur(5px);
+		    -moz-filter: blur(5px);
+		    -o-filter: blur(5px);
+		    -ms-filter: blur(5px);
+			}
+			#passButton {
+				position: absolute;
+				top: 1em;
+				left: 1em;
+				width: 10em;
+			}
+			.close {
+				display: block;
+				position: relative;
+				top: -55%;
+				left: -9%;
+				width: 1.5em;
+				height: 1.5em;
+				border-radius: 50%;
+				border: 2px solid #555555;
+				cursor: pointer;
+				line-height: 1.5em;
+				text-align: center;
+				background: white;
+			}
+		</style>
+		<script>
+			function showDomains() {
+				var x = document.getElementById('domains');
+				if(x.style.display == "none") {
+					x.style.display = "block";
+					document.getElementById('main').setAttribute('class', 'blur');
+					document.getElementById('passButton').setAttribute('class', 'blur');
+				} else {
+					x.style.display = "none";
+					document.getElementById('main').setAttribute('class', null);
+					document.getElementById('passButton').setAttribute('class', null);
+				}
+			}
+
+			function passChange() {
+				var x = document.getElementById('changePass');
+				if(x.style.display == "none") {
+					x.style.display = "block";
+					document.getElementById('main').setAttribute('class', 'blur');
+					document.getElementById('passButton').setAttribute('class', 'blur');
+				} else {
+					x.style.display = "none";
+					document.getElementById('main').setAttribute('class', null);
+					document.getElementById('passButton').setAttribute('class', null);
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<div id="main">
+			<p align="center">Generate a certificate for a domain</p>
+			<form action="/main" method="post">
+				<input type='text' name='domain' placeholder="sub.domain.tld" />
+				<br />
+				<br />
+				<input type='submit' />
+			</form>
+			<hr />
+			<p id="out">
+				{% for i in output %}
+					<span>{{ i }}</span>
+				{% endfor %}
+			</p>
+			<p style="width: 30%; margin: auto; margin-bottom: 10px;"><button onclick="showDomains()">Show Installed Domains</button>
+		</div>
+		<button id="passButton" onclick="passChange()">Change Admin Password</button>
+		<div id='domains' class="overlay" style="display:none;">
+			<p>
+				{% for i in domains %}
+					<span>{{ i }}</span>
+				{% endfor %}
+			</p>
+			<span class="close" style="top:-101%;" onclick="showDomains()">X</span>
+		</div>
+		{% if error %}
+			<div id="changePass" class="overlay">
+				<span style="color:red;">{{ errorText }}</span>
+				<form action="/update" method="POST">
+					<input type="password" name="password1" placeholder="New Password">
+					<br />
+					<br />
+					<input type="password" name="password2" placeholder="Repeat New Password">
+					<br />
+					<br />
+					<input type='submit' />
+					<br />
+					<br />
+				</form>
+				<span class="close" onclick="passChange()">X</span>
+			</div>
+		{% else %}
+			<div id="changePass" class="overlay" style="display:none">
+				<form action="/update" method="POST">
+					<input type="password" name="password1" placeholder="New Password">
+					<br />
+					<br />
+					<input type="password" name="password2" placeholder="Repeat New Password">
+					<br />
+					<br />
+					<input type='submit' />
+					<br />
+					<br />
+				</form>
+				<span class="close" onclick="passChange()">X</span>
+			</div>
+		{% endif %}
+	</body>
+</html>
