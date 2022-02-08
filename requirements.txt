@@ -1,0 +1,4 @@
+Flask==2.0.2
+Jinja2==3.0.3
+python_bcrypt==0.3.2
+requests==2.27.1
