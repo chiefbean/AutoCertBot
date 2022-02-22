@@ -16,7 +16,9 @@ def main(args):
 
     if not (os.path.exists("/etc/letsencrypt/live/%s/fullchain.pem" % domain) and os.path.exists("/etc/letsencrypt/live/%s/privkey.pem" % domain)):
         print('[*] Generating certs.')
-        os.system("certbot certonly --nginx -d %s" % domain)
+        if os.system("certbot certonly --nginx -d %s" % domain) != 0:
+            print('[*] Error generating certs, please try again.')
+            exit(1)
     else:
         print("[+] Certs already exist. Skipping.")
 
